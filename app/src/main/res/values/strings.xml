@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">ImageMachine</string>
+    <string name="title_delete">Delete</string>
+    <string name="title_sort">Sort</string>
+    <string name="label_pick_image">Pick Images</string>
+    <string name="label_sort_machine">Sort Machine</string>
+    <string name="label_machine_type">Machine Type</string>
+    <string name="label_machine_name">Machine Name</string>
+    <string name="label_machine_qr_code">Machine QR Code</string>
+    <string name="label_last_maintenance_date">Last Maintenance Date</string>
+    <string name="label_select_date">Select Date</string>
+    <string name="label_scan_qr_code">Scan QR Code</string>
+    <string name="btn_add_images">Add Images</string>
+    <string name="btn_delete_image">Delete Images</string>
+    <string name="btn_add_machine">Add Machine</string>
+    <string name="btn_update_machine">Update Machine</string>
+    <string name="btn_delete_machine">Delete Machine</string>
+    <string name="label_max_10_images">Max. 10 Images</string>
+    <string name="label_delete_machine">Delete Machine ?</string>
+    <string name="message_delete_machine">Delete machine will remove all the data related this machine including the images you have added.</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_ok">Ok</string>
+    <string name="message_data_not_found">Data not found or invalid qr code</string>
+    <string name="message_max_image_files">Maximum image that could be added are 10 items</string>
+    <string name="message_opps_error">Opps, something error</string>
+    <string-array name="sort_array">
+        <item>Machine Name</item>
+        <item>Machine Type</item>
+    </string-array>
+</resources>
