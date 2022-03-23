@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.caca.imagemachine.databinding.ItemMachineBinding;
 import com.caca.imagemachine.entity.Machine;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ import java.util.List;
 public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.MachineViewHolder> {
 
     private List<Machine> machines;
-    private ItemClickListener listener;
+    private final ItemClickListener listener;
 
     public MachineAdapter(List<Machine> machines, ItemClickListener listener) {
         this.machines = machines;
@@ -42,8 +43,7 @@ public class MachineAdapter extends RecyclerView.Adapter<MachineAdapter.MachineV
     }
 
     public void notifyDataChanges(List<Machine> machines) {
-        this.machines.clear();
-        this.machines.addAll(machines);
+        this.machines = new ArrayList<>(machines);
         notifyDataSetChanged();
     }
 

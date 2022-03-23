@@ -11,7 +11,7 @@ import com.caca.imagemachine.entity.MachineImage;
 
 import java.util.List;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * @author caca rusmana on 18/03/22
@@ -33,7 +33,6 @@ public interface MachineImageDao {
 
     @Delete
     void delete(MachineImage machineImage);
-
 
     @Query("SELECT * FROM MachineImage")
     Single<List<MachineImage>> getAll();

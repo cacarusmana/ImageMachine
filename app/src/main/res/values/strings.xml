@@ -23,7 +23,9 @@
     <string name="btn_ok">Ok</string>
     <string name="message_data_not_found">Data not found or invalid qr code</string>
     <string name="message_max_image_files">Maximum image that could be added are 10 items</string>
-    <string name="message_opps_error">Opps, something error</string>
+    <string name="message_opps_error">Opps, something error happened</string>
+    <string name="message_no_machines">No machines available at this moment</string>
+    <string name="label_required">Required</string>
     <string-array name="sort_array">
         <item>Machine Name</item>
         <item>Machine Type</item>

@@ -11,7 +11,7 @@ import com.caca.imagemachine.entity.Machine;
 
 import java.util.List;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * @author caca rusmana on 18/03/22

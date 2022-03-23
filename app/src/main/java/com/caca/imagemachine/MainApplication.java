@@ -7,8 +7,8 @@ import dagger.hilt.android.HiltAndroidApp;
 /**
  * @author caca rusmana on 18/03/22
  */
-//@HiltAndroidApp
-public class MainApplication extends Application  {
+@HiltAndroidApp
+public class MainApplication extends Application {
 
     @Override
     public void onCreate() {
