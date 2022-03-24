@@ -34,6 +34,12 @@ public interface MachineDao {
     @Query("SELECT * FROM Machine ORDER BY machineType ASC")
     Single<List<Machine>> getAllOrderByMachineType();
 
-    @Query("SELECT * FROM MACHINE WHERE machineQrCode = :machineQrCode")
+    @Query("SELECT * FROM Machine WHERE machineQrCode = :machineQrCode")
     Single<Machine> findByMachineQrCode(String machineQrCode);
+
+    @Query("SELECT COUNT(1) FROM Machine WHERE machineQrCode = :machineQrCode")
+    Integer countByMachineQrCode(String machineQrCode);
+
+    @Query("SELECT COUNT(1) FROM Machine WHERE machineQrCode = :machineQrCode AND machineId != :machineId")
+    Integer countByMachineQrCodeAndMachineId(String machineQrCode, Long machineId);
 }

@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -77,7 +76,7 @@ public class MachineSummaryActivity extends BaseActivity {
     protected void initObserver() {
         mViewModel.errorState.observe(this, isError -> {
             if (isError) {
-                Toast.makeText(this, getString(R.string.message_opps_error), Toast.LENGTH_LONG).show();
+                Utility.showSnackBar(binding.getRoot(), getString(R.string.message_opps_error));
             }
         });
 
@@ -87,8 +86,8 @@ public class MachineSummaryActivity extends BaseActivity {
                     Utility.viewsVisible(binding.tvNoData);
                 } else {
                     Utility.viewsGone(binding.tvNoData);
-                    machineAdapter.notifyDataChanges(machines);
                 }
+                machineAdapter.notifyDataChanges(machines);
             }
         });
 

@@ -48,4 +48,12 @@ public class MachineRepository {
     public void deleteMachine(Machine machine) {
         machineDao.delete(machine);
     }
+
+    public Integer countByMachineQrCode(String machineQrCode) {
+        return machineDao.countByMachineQrCode(machineQrCode);
+    }
+
+    public Integer countByMachineQrCodeAndMachineId(String machineQrCode, Long machineId) {
+        return machineDao.countByMachineQrCodeAndMachineId(machineQrCode, machineId);
+    }
 }

@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -107,8 +106,10 @@ public class AddMachineActivity extends BaseActivity {
         });
 
         binding.btnSave.setOnClickListener((v) -> {
-            mViewModel.saveMachine(Utility.getEditTextValue(binding.tilMachineName), Utility.getEditTextValue(binding.tilMachineType),
-                    Utility.getEditTextValue(binding.tilMachineQrCode), Utility.getEditTextValue(binding.tilMaintenanceDate));
+            if (validateInput()) {
+                mViewModel.saveMachine(Utility.getEditTextValue(binding.tilMachineName), Utility.getEditTextValue(binding.tilMachineType),
+                        Utility.getEditTextValue(binding.tilMachineQrCode), Utility.getEditTextValue(binding.tilMaintenanceDate));
+            }
         });
 
         Objects.requireNonNull(binding.tilMaintenanceDate.getEditText()).setOnClickListener((v) -> {
@@ -130,7 +131,7 @@ public class AddMachineActivity extends BaseActivity {
     protected void initObserver() {
         mViewModel.errorState.observe(this, isError -> {
             if (isError) {
-                Toast.makeText(this, getString(R.string.message_opps_error), Toast.LENGTH_LONG).show();
+                Utility.showSnackBar(binding.getRoot(), getString(R.string.message_opps_error));
             }
         });
 
@@ -154,6 +155,12 @@ public class AddMachineActivity extends BaseActivity {
                 mViewModel.resetCudMachineState();
             }
         });
+
+        mViewModel.errorMessageState.observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                Utility.showSnackBar(binding.getRoot(), errorMessage);
+            }
+        });
     }
 
     private void initData() {
@@ -165,6 +172,28 @@ public class AddMachineActivity extends BaseActivity {
         Utility.setTextInputEditTextValue(binding.tilMaintenanceDate, mViewModel.machine.getLastMaintenanceDate());
 
         mViewModel.getMachineImages();
+    }
+
+    private boolean validateInput() {
+        var counter = 0;
+        Utility.clearErrors(binding.tilMachineName, binding.tilMachineType, binding.tilMachineQrCode);
+
+        if (Utility.getEditTextValue(binding.tilMachineName).isEmpty()) {
+            binding.tilMachineName.setError(getString(R.string.message_machine_name_required));
+            counter++;
+        }
+
+        if (Utility.getEditTextValue(binding.tilMachineType).isEmpty()) {
+            binding.tilMachineType.setError(getString(R.string.message_machine_type_required));
+            counter++;
+        }
+
+        if (Utility.getEditTextValue(binding.tilMachineQrCode).isEmpty()) {
+            binding.tilMachineQrCode.setError(getString(R.string.message_machine_qr_required));
+            counter++;
+        }
+
+        return counter == 0;
     }
 
     private void pickImage() {
@@ -192,7 +221,7 @@ public class AddMachineActivity extends BaseActivity {
                 int count = data.getClipData().getItemCount();
 
                 if ((mViewModel.machineImages.size() + count) > 10) {
-                    Toast.makeText(this, getString(R.string.message_max_image_files), Toast.LENGTH_SHORT).show();
+                    Utility.showSnackBar(binding.getRoot(), getString(R.string.message_max_image_files));
                     return;
                 }
 
@@ -210,7 +239,7 @@ public class AddMachineActivity extends BaseActivity {
         try {
             mViewModel.addMachineImages(imageUri, FileUtil.getBitmapFromUri(this, imageUri), FileUtil.getFilenameFromUri(this, imageUri));
         } catch (IOException e) {
-            Toast.makeText(this, getString(R.string.message_opps_error), Toast.LENGTH_SHORT).show();
+            Utility.showSnackBar(binding.getRoot(), getString(R.string.message_opps_error));
         }
     }
 

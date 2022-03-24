@@ -26,6 +26,9 @@
     <string name="message_opps_error">Opps, something error happened</string>
     <string name="message_no_machines">No machines available at this moment</string>
     <string name="label_required">Required</string>
+    <string name="message_machine_name_required">Machine Name is required</string>
+    <string name="message_machine_type_required">Machine Type is required</string>
+    <string name="message_machine_qr_required">Machine QR Code is required</string>
     <string-array name="sort_array">
         <item>Machine Name</item>
         <item>Machine Type</item>

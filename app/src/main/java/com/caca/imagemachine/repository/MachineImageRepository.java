@@ -34,4 +34,9 @@ public class MachineImageRepository {
     public void deleteMachineImages(List<MachineImage> machineImages) {
         machineImageDao.delete(machineImages);
     }
+
+    public boolean isImageFileNeedToBeDeleted(Long machineImageId, String fileName) {
+        return machineImageDao.countByMachineImageIdAndFileName(machineImageId, fileName) == 0;
+    }
+
 }

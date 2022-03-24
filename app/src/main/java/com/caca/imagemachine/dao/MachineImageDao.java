@@ -39,4 +39,7 @@ public interface MachineImageDao {
 
     @Query("SELECT * FROM MachineImage WHERE machineId = :machineId")
     List<MachineImage> findByMachineId(long machineId);
+
+    @Query("SELECT COUNT(1) FROM MachineImage WHERE machineImageId != :machineImageId AND fileName = :fileName")
+    Integer countByMachineImageIdAndFileName(Long machineImageId, String fileName);
 }

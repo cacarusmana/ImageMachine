@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.caca.imagemachine.MachineQrCodeExistException;
 import com.caca.imagemachine.entity.Machine;
 import com.caca.imagemachine.entity.MachineImage;
 import com.caca.imagemachine.repository.MachineImageRepository;
@@ -44,6 +45,7 @@ public class AddMachineViewModel extends BaseViewModel {
     public MutableLiveData<Boolean> cudMachineState = new MutableLiveData<>();
     public MutableLiveData<Boolean> errorState = new MutableLiveData<>();
     public MutableLiveData<Boolean> selectionModeState = new MutableLiveData<>();
+    public MutableLiveData<String> errorMessageState = new MutableLiveData<>();
 
 
     @Inject
@@ -77,27 +79,34 @@ public class AddMachineViewModel extends BaseViewModel {
                 machine = new Machine();
             }
 
-            machine.setMachineName(machineName);
-            machine.setMachineType(machineType);
-            machine.setMachineQrCode(machineQrCode);
-            machine.setLastMaintenanceDate(lastMaintenanceDate);
+            var count = isEdit ? machineRepository.countByMachineQrCodeAndMachineId(machineQrCode, machine.getMachineId())
+                    : machineRepository.countByMachineQrCode(machineQrCode);
 
-            machineRepository.saveMachine(machine, isEdit);
+            if (count > 0) {
+                emitter.onError(new MachineQrCodeExistException("Machine QR Code is already exists"));
+            } else {
+                machine.setMachineName(machineName);
+                machine.setMachineType(machineType);
+                machine.setMachineQrCode(machineQrCode);
+                machine.setLastMaintenanceDate(lastMaintenanceDate);
 
-            for (MachineImage machineImage : machineImages) {
-                if (machineImage.isNew()) {
-                    machineImage.setMachineId(machine.getMachineId());
-                    FileUtil.writeToFile(machineImage.getBitmap(), fileDir, machineImage.getFileName());
-                    machineImageRepository.saveMachineImage(machineImage);
+                machineRepository.saveMachine(machine, isEdit);
+
+                for (MachineImage machineImage : machineImages) {
+                    if (machineImage.isNew()) {
+                        machineImage.setMachineId(machine.getMachineId());
+                        FileUtil.writeToFile(machineImage.getBitmap(), fileDir, machineImage.getFileName());
+                        machineImageRepository.saveMachineImage(machineImage);
+                    }
                 }
-            }
 
-            for (MachineImage machineImage : deletedMachineImages) {
-                FileUtil.deleteFile(fileDir, machineImage.getFileName());
-                machineImageRepository.deleteMachineImage(machineImage);
-            }
+                for (MachineImage machineImage : deletedMachineImages) {
+                    FileUtil.deleteFile(fileDir, machineImage.getFileName());
+                    machineImageRepository.deleteMachineImage(machineImage);
+                }
 
-            emitter.onComplete();
+                emitter.onComplete();
+            }
         });
         disposable.add(single.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(this::setCudMachineState, this::setError));
     }
@@ -109,12 +118,13 @@ public class AddMachineViewModel extends BaseViewModel {
 
             machineImageRepository.deleteMachineImages(machineImages);
             machineRepository.deleteMachine(machine);
-            for (MachineImage machineImage : machineImages) {
-                FileUtil.deleteFile(fileDir, machineImage.getFileName());
-            }
 
-            for (MachineImage machineImage : deletedMachineImages) {
-                FileUtil.deleteFile(fileDir, machineImage.getFileName());
+            var deletedImages = new ArrayList<>(machineImages);
+            deletedImages.addAll(deletedMachineImages);
+            for (MachineImage machineImage : deletedImages) {
+                if (machineImageRepository.isImageFileNeedToBeDeleted(machineImage.getMachineImageId(), machineImage.getFileName())) {
+                    FileUtil.deleteFile(fileDir, machineImage.getFileName());
+                }
             }
 
             emitter.onComplete();
@@ -133,6 +143,16 @@ public class AddMachineViewModel extends BaseViewModel {
         if (!isExists) {
             machineImages.add(new MachineImage(fileName, imageBitmap));
             machineImagesState.postValue(machineImages);
+        }
+    }
+
+    @Override
+    protected void setError(Throwable throwable) {
+        if (throwable instanceof MachineQrCodeExistException) {
+            errorMessageState.postValue(throwable.getMessage());
+        } else {
+            errorMessageState.postValue(null);
+            super.setError(throwable);
         }
     }
 

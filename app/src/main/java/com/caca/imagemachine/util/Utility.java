@@ -2,6 +2,7 @@ package com.caca.imagemachine.util;
 
 import android.view.View;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
@@ -37,6 +38,16 @@ public final class Utility {
     public static void setTextInputEditTextValue(TextInputLayout til, String value) {
         if (til.getEditText() != null) {
             til.getEditText().setText(value);
+        }
+    }
+
+    public static void showSnackBar(View view, String errorMessage) {
+        Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+    }
+
+    public static void clearErrors(TextInputLayout... til) {
+        for (TextInputLayout t : til) {
+            t.setError(null);
         }
     }
 }
